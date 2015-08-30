@@ -1,7 +1,7 @@
 {
   "name": "kit",
-  "version": "1.0.0",
   "description": "kit",
+  "version": "1.0.0",
   "dependencies": {
     "angular": "latest",
     "angular-mocks": "latest",
