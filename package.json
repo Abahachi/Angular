@@ -1,0 +1,28 @@
+{
+  "name": "kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "glob": "^5.0.14",
+    "jade": "^1.11.0",
+    "load-grunt-tasks": "^3.2.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abahachi/Angular.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abahachi/Angular/issues"
+  },
+  "homepage": "https://github.com/Abahachi/Angular#readme"
+}
