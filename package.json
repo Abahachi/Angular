@@ -11,11 +11,14 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "browserify": "^11.0.1",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-concat": "^2.6.0",
     "gulp-livereload": "^3.8.0",
-    "gulp-sass": "^2.0.4"
+    "gulp-plumber": "^1.0.1",
+    "gulp-sass": "^2.0.4",
+    "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
