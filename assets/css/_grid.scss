@@ -1,0 +1,16 @@
+g.axis {
+  pointer-events: none; //mo mouse
+
+  line{
+    fill: none;
+    stroke: #ddd;
+    shape-rendering: crispEdges; //Ostryje Kraja
+  }
+}
+
+.svg-border {
+  pointer-events: none;
+  stroke: #a9b0b8;
+  stroke-width: 1.5;
+  fill: none;
+}

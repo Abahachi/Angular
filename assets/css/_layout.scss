@@ -1,0 +1,23 @@
+#container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: none;
+
+  .kit-editor {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    svg{
+      width:  100%;
+      height: 100%;
+    }
+  }
+  svg .underlay {
+    fill: none;
+    point-events: all !important;
+  }
+}

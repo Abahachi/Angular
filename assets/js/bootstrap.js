@@ -1,4 +1,5 @@
-/**
- * Created by Asuska on 31.08.2015.
- */
-console.log("Bootstrap1");
+require("../../vendor/angular/angular")
+require("./modules/d3")
+require("./modules/directives")
+
+angular.module('kitApp', ['d3', 'kitApp.directives']);

@@ -9,5 +9,7 @@ html
         script(src="/build/combined.js")
         title= pageTitle
 
-        body
-            button Baton
+        //- bootstrap
+        body(data-ng-app= "kitApp")
+            #container
+                .kit-editor(data-kit-editor)
