@@ -4,7 +4,6 @@
   right: 0;
   top: 0;
   bottom: 0;
-  background: none;
 
   .kit-editor {
     position: relative;
@@ -18,6 +17,6 @@
   }
   svg .underlay {
     fill: none;
-    point-events: all !important;
+    pointer-events: all !important;
   }
 }

@@ -10,7 +10,8 @@ module.exports = [
             link: function($scope, $element, $attrs){
                 d3Factory.d3().then(function(d3){
                     $scope.editor = {};
-                    $scope.editor.behavior ={};
+                    $scope.editor.behavior = {};
+                    $scope.editor.behavior.d3 = {};
 
                     $scope.editor.grid ={};
                     $scope.editor.grid.visibility = true;
@@ -18,6 +19,13 @@ module.exports = [
                     $scope.editor.grid.sizeYmm = 5;
 
                     $scope.editor.features = {};
+
+                    $scope.editor.center = function (){
+console.log("x = ",$scope.editor.position.x);
+                        console.log("y = ",$scope.editor.position.y);
+
+                        //alert('zazasda');
+                    }
 
                     $scope.editor.position = {};
                     $scope.editor.position.x = 0;
@@ -35,7 +43,8 @@ module.exports = [
                     $scope.editor.features.pixelPerMmY = 1 / $scope.editor.svg.rootNode.node().screenPixelToMillimeterY;
 
                     var g = $scope.editor.svg.rootNode
-                        .append("g");
+                        .append("g")
+                        .attr("transform", "translate(0,0)");
 
                     $scope.editor.svg.underlay = g.append("rect")
                         .attr("class", "underlay")
@@ -70,7 +79,56 @@ module.exports = [
                             .attr("width", pageWidth)
                             .attr("height", pageHeigth)
 
+                        var lineY = gGridY.selectAll("line")
+                            .data(d3.range(0, pageWidth, $scope.editor.grid.sizeXmm *
+                                $scope.editor.features.pixelPerMmX));
+
+                        lineY.enter().append("line")
+                            .attr("x1", function(d){return d;})
+                            .attr("y1", 0)
+                            .attr("y2", 0)
+                            .transition()
+                            .duration(DURATION)
+                            .attr("x2", function(d){return d;})
+                            .attr("y2", pageHeigth)
+
+                        var lineX = gGridX.selectAll("line")
+                            .data(d3.range(0, pageHeigth, $scope.editor.grid.sizeYmm *
+                                $scope.editor.features.pixelPerMmY));
+
+                        lineX.enter().append("line")
+                            .attr("y1", function(d){return d;})
+                            .attr("x1", 0)
+                            .attr("x2", 0)
+                            .transition()
+                            .duration(DURATION)
+                            .attr("y2", function(d){return d;})
+                            .attr("x2", pageWidth)
                     }
+
+                    $scope.editor.behavior.d3.zoom = d3.behavior.zoom()
+                        .scale(1)
+                        .scaleExtent([.2, 10]) //min-max zoom
+                        .on("zoom", zoomed);
+
+                    g.call($scope.editor.behavior.d3.zoom);
+                    $scope.editor.behavior.d3.zoom.event($scope.editor.svg.container);
+
+                    function zoomed(){
+
+                        var t = d3.event.translate;
+
+                        $scope.editor.svg.container
+                            .attr("transform", "translate(" + t + ") scale (" +
+                            d3.event.scale + ")");
+
+                        t = t.toString().split(",");
+                        $scope.editor.position.x = t[0];
+                        $scope.editor.position.y = t[1];
+                        $scope.editor.center();
+                    }
+
+
                 });
             }
         }

@@ -5,6 +5,8 @@ g.axis {
     fill: none;
     stroke: #ddd;
     shape-rendering: crispEdges; //Ostryje Kraja
+    vector-effect: non-scaling-stroke;
+
   }
 }
 
