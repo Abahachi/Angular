@@ -9,7 +9,56 @@ module.exports = [
             //$elem - обёрнут в jqLite
             link: function($scope, $element, $attrs){
                 d3Factory.d3().then(function(d3){
+
                     $scope.editor = {};
+
+                    //@param pt = конечная точка
+                    $scope.editor.translateTo = function(pt){
+                        var d = $q.defer();
+                        var DURATION = 2000;
+                        d.notify('About to start transfer');
+
+
+                        function translateToInternal(){
+                            $scope.editor.behavior.d3.zoom.translate([x,y]);
+                            $scope.editor.behavior.d3.zoom.event($scope.editor.svg.container); // refresh page
+                            $scope.editor.position.x = x;
+                            $scope.editor.position.y = y;
+                        }
+
+                        d3.transition()
+                            .duration(DURATION)
+                            .tween("translateTo", function() {
+                                var step = d3.interpolate([$scope.editor.position.x,  $scope.editor.position.y],[pt.x, pt.y]);
+                                //step(0)[0] ->  $scope.editor.position.x
+                                //step(0)[1] ->  $scope.editor.position.y
+                                //step(1)[0] ->  pt.x
+                                //step(1)[1] ->  pt.y
+
+
+
+                                //t = 0->1
+                                return function(t){
+                                    translateToInternal(step(t)[0], step(t)[1]);
+
+                                }
+                            }).each("end", function () {
+                                d.resolve('Translate to (' + pt.x + ';' + pt.y + ') successfully');
+                            });
+                        return d.promise;
+
+                    };
+                    $scope.editor.center = function(){
+
+                        var center = {
+                            x: 0,
+                            y: 0
+                        };
+                        return $scope.editor.translateTo(center);
+
+                    };
+
+
                     $scope.editor.behavior = {};
                     $scope.editor.behavior.d3 = {};
 
@@ -19,13 +68,6 @@ module.exports = [
                     $scope.editor.grid.sizeYmm = 5;
 
                     $scope.editor.features = {};
-
-                    $scope.editor.center = function (){
-console.log("x = ",$scope.editor.position.x);
-                        console.log("y = ",$scope.editor.position.y);
-
-                        //alert('zazasda');
-                    }
 
                     $scope.editor.position = {};
                     $scope.editor.position.x = 0;
@@ -77,7 +119,7 @@ console.log("x = ",$scope.editor.position.x);
                             .transition()
                             .duration(DURATION)
                             .attr("width", pageWidth)
-                            .attr("height", pageHeigth)
+                            .attr("height", pageHeigth);
 
                         var lineY = gGridY.selectAll("line")
                             .data(d3.range(0, pageWidth, $scope.editor.grid.sizeXmm *
@@ -90,7 +132,7 @@ console.log("x = ",$scope.editor.position.x);
                             .transition()
                             .duration(DURATION)
                             .attr("x2", function(d){return d;})
-                            .attr("y2", pageHeigth)
+                            .attr("y2", pageHeigth);
 
                         var lineX = gGridX.selectAll("line")
                             .data(d3.range(0, pageHeigth, $scope.editor.grid.sizeYmm *
@@ -112,11 +154,21 @@ console.log("x = ",$scope.editor.position.x);
                         .on("zoom", zoomed);
 
                     g.call($scope.editor.behavior.d3.zoom);
-                    $scope.editor.behavior.d3.zoom.event($scope.editor.svg.container);
+                    $scope.editor.behavior.d3.zoom.event( $scope.editor.svg.container );
+
+                    $scope.editor.features.centring = function (){
+
+                        $scope.editor.svg.container.centerX = ( $element[0].clientWidth - pageWidth ) / 2;
+                        $scope.editor.svg.container.centerY = ( $element[0].clientHeight - pageHeigth ) / 2;
+                        //$scope.editor.behavior.d3.zoom
+                        //    .translate([200, 100]).scale(1);
+                        $scope.editor.svg.container
+                            .attr("transform", "translate(" + $scope.editor.svg.container.centerX + "," + $scope.editor.svg.container.centerY + ") scale ("+
+                            $scope.editor.scale + ")");
+
+                    };
 
                     function zoomed(){
-
-                        var t = d3.event.translate;
 
                         $scope.editor.svg.container
                             .attr("transform", "translate(" + t + ") scale (" +
@@ -125,8 +177,15 @@ console.log("x = ",$scope.editor.position.x);
                         t = t.toString().split(",");
                         $scope.editor.position.x = t[0];
                         $scope.editor.position.y = t[1];
-                        $scope.editor.center();
+                        $scope.editor.scale = d3.event.scale;
                     }
+
+
+                    setTimeout(function(){
+                        $scope.editor.translateTo({x: 300, y: 400}.then(function(message){
+                            console.log(message);
+                        }), 3000);
+                    })
 
 
                 });
